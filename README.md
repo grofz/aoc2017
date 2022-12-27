@@ -14,3 +14,6 @@ Solving Advent of Code 2017 in Fortran
 5. A Maze of Twisty Trampolines, All Alike
 - jump inside an array of integers and modify them
 6. Memory Reallocation
+- evolve state, detect when state repeats
+- using red-black tree to store the states
+7. Recursive Circus
