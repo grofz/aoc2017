@@ -21,3 +21,5 @@ Solving Advent of Code 2017 in Fortran
 8. I Heard You Like Registers
 - implement register operations
 - using red-black tree to store the register names
+9. Stream processiong
+- parse nested groups and garbage
