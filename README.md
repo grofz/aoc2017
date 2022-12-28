@@ -17,3 +17,7 @@ Solving Advent of Code 2017 in Fortran
 - evolve state, detect when state repeats
 - using red-black tree to store the states
 7. Recursive Circus
+- using recursion to find unbalanced sub-tower
+8. I Heard You Like Registers
+- implement register operations
+- using red-black tree to store the register names
