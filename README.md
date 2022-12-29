@@ -21,5 +21,9 @@ Solving Advent of Code 2017 in Fortran
 8. I Heard You Like Registers
 - implement register operations
 - using red-black tree to store the register names
-9. Stream processiong
+9. Stream Processiong
 - parse nested groups and garbage
+10. Knot Hash
+- implment knot hash algorithm
+11. Hex Ed
+- calculate moving distance within a hexagonal grid
