@@ -27,3 +27,5 @@ Solving Advent of Code 2017 in Fortran
 - implment knot hash algorithm
 11. Hex Ed
 - calculate moving distance within a hexagonal grid
+12. Digital Plumber
+- label connected groups (using a recursive flood-fill)
