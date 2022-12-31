@@ -34,3 +34,6 @@ Solving Advent of Code 2017 in Fortran
 14. Disk Defragmentation
     - use knot hash from Day 10
     - label connected groups
+15. Dueling Generators
+    - generate sequence of numbers and compare their bit values
+    - using "btest" and other bit manipulation procedures
