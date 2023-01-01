@@ -37,3 +37,7 @@ Solving Advent of Code 2017 in Fortran
 15. Dueling Generators
     - generate sequence of numbers and compare their bit values
     - using "btest" and other bit manipulation procedures
+16. Permutation Promenade
+    - simulate operations with a string (swaps, shifts)
+    - repeat for an astronomical number of times in Part 2
+    - then evaluate the repeating pattern
