@@ -19,7 +19,11 @@ contains
     x = 0
     ans2 = 0
     do i=1,size(words)
-      j = findloc(CHDIRS, words(i)%str, 1)
+      if (len(words(i)%str)==1) then
+        j = findloc(CHDIRS, words(i)%str//' ', 1)
+      else
+        j = findloc(CHDIRS, words(i)%str, 1)
+      end if
       if (j<1 .or. j>6) error stop 'unknown movement'
       x = x + DIRS(:,j)
       if (maxval(abs(x))>ans2) ans2 = maxval(abs(x))
