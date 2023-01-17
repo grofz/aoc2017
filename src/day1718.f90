@@ -30,6 +30,9 @@ module day1718_mod
   contains
     procedure :: exec_one => comp_exec_one
   end type comp_t
+  interface comp_t
+    module procedure comp_new
+  end interface
 
 contains
 
@@ -85,6 +88,8 @@ contains
         this%regs(op(1)%id)%v = op(2)%val(this%regs)
       case('add')
         this%regs(op(1)%id)%v = op(1)%val(this%regs) + op(2)%val(this%regs)
+      case('sub')
+        this%regs(op(1)%id)%v = op(1)%val(this%regs) - op(2)%val(this%regs)
       case('mul')
         this%regs(op(1)%id)%v = op(1)%val(this%regs) * op(2)%val(this%regs)
       case('mod')
@@ -92,6 +97,8 @@ contains
         !this%regs(op(1)%id)%v = mod(op(1)%val(this%regs), op(2)%val(this%regs))
       case('jgz')
         if (op(1)%val(this%regs)>0) ijump = op(2)%val(this%regs)
+      case('jnz')
+        if (op(1)%val(this%regs)/=0) ijump = op(2)%val(this%regs)
       case('snd')
         this%saved = op(1)%val(this%regs)
 if (abs(this%saved) > huge(itmp)-1) error stop 'queue is not int64'
@@ -106,6 +113,7 @@ if (abs(this%saved) > huge(itmp)-1) error stop 'queue is not int64'
           this%regs(op(1)%id)%v = itmp
         end if
       case default
+        print *, this%prog(this%ip)%ch
         error stop 'exec_one'
       end select
       this%ip = this%ip + ijump
@@ -129,7 +137,7 @@ if (abs(this%saved) > huge(itmp)-1) error stop 'queue is not int64'
 
   type(comp_t) function comp_new(file, rank) result(new)
     character(len=*), intent(in) :: file
-    integer, intent(in) :: rank
+    integer, intent(in), optional :: rank
 
     type(string_t), allocatable :: lines(:)
     integer :: i
@@ -146,7 +154,9 @@ if (abs(this%saved) > huge(itmp)-1) error stop 'queue is not int64'
     end do
 
     ! Set rank and initialize the receiving queue
-    new%regs(iachar('p')-iachar('a')+1)%v = rank
+    if (present(rank)) then
+      new%regs(iachar('p')-iachar('a')+1)%v = rank
+    end if
     new%receiving = queue_t(MAX_QUEUE)
   end function comp_new
 

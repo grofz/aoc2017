@@ -18,9 +18,11 @@ program main
   use day1717_mod, only: day1717
   use day1718_mod, only: day1718
   use day1719_mod, only: day1719
+  use day1720_mod, only: day1720
+  use day1723_mod, only: day1723
   implicit none
 
-  goto 19
+  !goto 20
   01 call day1701('inp/01/input.txt')
   02 call day1702('inp/02/input.txt')
   03 call day1703()
@@ -40,4 +42,6 @@ program main
   17 call day1717()
   18 call day1718('inp/18/input.txt')
   19 call day1719('inp/19/input.txt')
+  20 call day1720('inp/20/input.txt')
+  23 call day1723('inp/23/input.txt')
 end program main
