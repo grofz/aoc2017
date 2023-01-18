@@ -2,6 +2,16 @@ module day1721_mod
   use parse_mod, only : string_t, read_strings
   implicit none
 
+  type pattern_t
+    character(len=1), allocatable :: src(:,:,:)
+    character(len=1), allocatable :: dst(:,:)
+  contains
+    procedure :: ispattern => pattern_ispattern
+  end type
+  interface pattern_t
+    module procedure pattern_new
+  end interface pattern_t
+
 contains
 
   subroutine day1721(file)
@@ -10,6 +20,7 @@ contains
     character(len=*), parameter :: INITSTR = '..##.#.##'
     integer, parameter :: REP1=5, REP2=18
     type(string_t), allocatable :: lines(:)
+    type(pattern_t), allocatable :: pats(:)
     character(len=1), allocatable :: mm(:,:)
     integer :: i, ans1, ans2
     real :: t0, t1
@@ -17,8 +28,15 @@ contains
     call cpu_time(t0)
     lines = read_strings(file)
     call readmat(INITSTR, mm)
+
+    ! Pre-process (for speed-up)
+    allocate(pats(size(lines)))
+    do i=1, size(lines)
+      pats(i) = pattern_t(lines(i)%str)
+    end do
+
     do i=1, REP2
-      mm = enhance(mm, lines)
+      mm = enhance(mm, pats = pats)
       !if (i<=REP1) call print_mat(mm)
       if (i==REP1) ans1 = count(mm=='#')
     end do
@@ -26,14 +44,14 @@ contains
     print '("Answer 21/1 ",i0,l2)', ans1, ans1==184
     print '("Answer 21/2 ",i0,l2)', ans2, ans2==2810258
     call cpu_time(t1)
-    print '("Time taken ",f6.2, " seconds.")', t1-t0
+    print '("  Day 21 time taken ",f6.2, " seconds.")', t1-t0
 
   end subroutine day1721
 
 
-  pure function enhance(src, lines) result(enh)
+  pure function enhance(src, pats) result(enh)
     character(len=1), intent(in) :: src(:,:)
-    type(string_t), intent(in) :: lines(:)
+    type(pattern_t), intent(in) :: pats(:)
     character(len=1), allocatable :: enh(:,:)
 
     integer :: nsrc, nenh, i, j, nshf
@@ -53,62 +71,60 @@ contains
     do i=1, nsrc/nshf
     do j=1, nsrc/nshf
       enh((i-1)*(nshf+1)+1:i*(nshf+1), (j-1)*(nshf+1)+1:j*(nshf+1)) = &
-      &  enhance_core(src((i-1)*nshf+1:i*nshf, (j-1)*nshf+1:j*nshf), lines)
+      &  enhance_core(src((i-1)*nshf+1:i*nshf, (j-1)*nshf+1:j*nshf), pats)
     end do
     end do
   end function enhance
 
 
-  pure function enhance_core(s, lines) result(r)
+  pure function enhance_core(s, pats) result(r)
     character(len=1), intent(in) :: s(:,:)
-    type(string_t), intent(in) :: lines(:)
+    type(pattern_t), intent(in) :: pats(:)
     character(len=1) :: r(size(s,1)+1,size(s,1)+1)
 
     character(len=1), allocatable :: ma(:,:), mb(:,:)
     integer :: i
 
     if (size(s,1)/=size(s,2)) error stop 'enhance_core - not square'
-    do i=1, size(lines)
-      call line2mat(lines(i)%str, ma, mb)
-      if (size(ma,1) /= size(s,1)) cycle
-      if (.not. ispattern(s, ma)) cycle
-      if (size(mb,1) /= size(r,1)) error stop 'enhance_core - wrong result'
-      r = mb
+    do i=1, size(pats)
+      if (.not. pats(i)%ispattern(s)) cycle
+      r = pats(i)%dst
       exit
     end do
-    if (i==size(lines)+1) error stop 'enhance_core - pattern not found'
+    if (i==size(pats)+1) error stop 'enhance_core - pattern not found'
   end function enhance_core
 
 
-  pure function ispattern(ma, mb)
-    character(len=1), intent(in) :: ma(:,:), mb(:,:)
-    logical :: ispattern
+  ! old - and not needed
+ !pure function ispattern(ma, mb)
+ !  character(len=1), intent(in) :: ma(:,:), mb(:,:)
+ !  logical :: ispattern
 
-    integer :: i
+ !  integer :: i
 
-    ispattern = .false.
-    do i=0, 7
-      select case(i)
-      case(0)
-        if (all(ma==mb)) ispattern = .true.
-      case(1)
-        if (all(ma==flipx(mb))) ispattern = .true.
-      case(2)
-        if (all(ma==flipy(mb))) ispattern = .true.
-      case(3)
-        if (all(ma==rotccw(mb))) ispattern = .true.
-      case(4)
-        if (all(ma==rotcw(mb))) ispattern = .true.
-      case(5)
-        if (all(ma==flipy(flipx(mb)))) ispattern = .true.
-      case(6)
-        if (all(ma==flipy(rotccw(mb)))) ispattern = .true.
-      case(7)
-        if (all(ma==flipy(rotcw(mb)))) ispattern = .true.
-      end select
-      if (ispattern) exit
-    end do
-  end function ispattern
+ !  ispattern = .false.
+ !  do i=0, 7
+ !    select case(i)
+ !    case(0)
+ !      if (all(ma==mb)) ispattern = .true.
+ !    case(1)
+ !      if (all(ma==flipx(mb))) ispattern = .true.
+ !    case(2)
+ !      if (all(ma==flipy(mb))) ispattern = .true.
+ !    case(3)
+ !      if (all(ma==rotccw(mb))) ispattern = .true.
+ !    case(4)
+ !      if (all(ma==rotcw(mb))) ispattern = .true.
+ !    case(5)
+ !      if (all(ma==flipy(flipx(mb)))) ispattern = .true.
+ !    case(6)
+ !      if (all(ma==flipy(rotccw(mb)))) ispattern = .true.
+ !    case(7)
+ !      if (all(ma==flipy(rotcw(mb)))) ispattern = .true.
+ !    end select
+ !    if (ispattern) exit
+ !  end do
+ !end function ispattern
 
 
   ! ============================
@@ -231,5 +247,54 @@ contains
       print '(*(a1,1x))', m(i,:)
     end do
   end subroutine print_mat
+
+
+  ! ====================
+  ! Pre-process patterns
+  ! ====================
+  pure type(pattern_t) function pattern_new(str) result(new)
+    character(len=*), intent(in) :: str
+
+    character(len=1), allocatable :: ma(:,:), mb(:,:)
+    integer :: n
+
+    call line2mat(str, ma, mb)
+    n = size(ma,1)
+    if (size(mb,1) /= n+1) error stop 'enhancement pattern wrong'
+
+    allocate(new%src(n, n, 8))
+    new%src(:,:,1) = ma
+    new%src(:,:,2) = flipx(ma)
+    new%src(:,:,3) = flipy(ma)
+    new%src(:,:,4) = rotccw(ma)
+    new%src(:,:,5) = rotcw(ma)
+    new%src(:,:,6) = flipy(flipx(ma))
+    new%src(:,:,7) = flipy(rotccw(ma))
+    new%src(:,:,8) = flipy(rotcw(ma))
+
+    allocate(new%dst(n+1, n+1))
+    new%dst = mb
+  end function pattern_new
+
+
+  pure function pattern_ispattern(this, m) result(is_pattern)
+    class(pattern_t), intent(in) :: this
+    character(len=1), intent(in) :: m(:,:)
+    logical :: is_pattern
+
+    integer :: i
+
+    is_pattern = .false.
+    if (size(m,1) == size(this%src,1)) then
+      do i=1, 8
+        if (all(m==this%src(:,:,i))) then
+          is_pattern = .true.
+          exit
+        end if
+      end do
+    end if
+  end function pattern_ispattern
+
+
 
 end module day1721_mod
