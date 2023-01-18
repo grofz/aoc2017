@@ -41,3 +41,20 @@ Solving Advent of Code 2017 in Fortran
     - simulate operations with a string (swaps, shifts)
     - repeat for an astronomical number of times in Part 2
     - then evaluate the repeating pattern
+17. Spinlock
+    - circular buffer
+18. Duet
+    - implement code interpreter, run two instances sending/receiving values between them
+    - using queue implementation
+19. Series of Tubes
+    - walk along lines, turn left/right at corners, record all letters along the path
+20. Particle Swarm
+    - position, velocity and acceleration of particles
+    - determine collisions
+    - just guessed when stop the simulation
+21. Fractal Art
+    TODO
+22. Sporifica Virus
+    TODO
+23. Coprocessor Conflagration
+    - decrypt what the code does (primary test)
