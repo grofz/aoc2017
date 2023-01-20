@@ -53,8 +53,9 @@ Solving Advent of Code 2017 in Fortran
     - determine collisions
     - just guessed when stop the simulation
 21. Fractal Art
-    TODO
+    - matrices, find patterns, rotate and flip
+    - expand
 22. Sporifica Virus
-    TODO
+    - moving in 2D matrix and modifying it
 23. Coprocessor Conflagration
     - decrypt what the code does (primary test)
