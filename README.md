@@ -59,3 +59,7 @@ Solving Advent of Code 2017 in Fortran
     - moving in 2D matrix and modifying it
 23. Coprocessor Conflagration
     - decrypt what the code does (primary test)
+24. Electromagnetic Moat
+    - DFS search for longest/strongest bridge
+25. The Halting Problem
+    - build the Turing tape machine
